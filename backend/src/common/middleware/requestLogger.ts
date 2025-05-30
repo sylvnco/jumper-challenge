@@ -1,9 +1,9 @@
 import { randomUUID } from "crypto";
-import { IncomingMessage, ServerResponse } from "http";
-import { Request, RequestHandler, Response } from "express";
+import type { IncomingMessage, ServerResponse } from "http";
+import type { Request, RequestHandler, Response } from "express";
 import { StatusCodes, getReasonPhrase } from "http-status-codes";
-import { LevelWithSilent } from "pino";
-import { CustomAttributeKeys, Options, pinoHttp } from "pino-http";
+import type { LevelWithSilent } from "pino";
+import { type CustomAttributeKeys, type Options, pinoHttp } from "pino-http";
 
 import { env } from "@/common/utils/envConfig";
 
