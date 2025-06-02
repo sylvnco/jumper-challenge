@@ -36,7 +36,7 @@ export const getTokensByWallet = async (
 			});
 		return z.array(TokenSchema).parse(tokens);
 	} catch (error) {
-		console.log(error);
+		console.error("Error while processing tokens", error);
 		return [];
 	}
 };

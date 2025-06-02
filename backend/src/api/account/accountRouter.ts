@@ -14,6 +14,7 @@ import { StatusCodes } from "http-status-codes";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { isAddress, verifyMessage, isHex } from "viem";
 import jwt from "jsonwebtoken";
+import { createUserIfNotExist } from "@/common/services/userService";
 
 extendZodWithOpenApi(z);
 
@@ -53,7 +54,6 @@ export const accountRouter: Router = (() => {
 		validateRequest(z.object({ body: accountBodySchema })),
 		async (_req: Request, res: Response) => {
 			const safeBody = _req.body as AccountBody;
-
 			const isVerified = await verifyMessage({
 				address: safeBody.address,
 				message: "Account Creation",
@@ -61,29 +61,40 @@ export const accountRouter: Router = (() => {
 			});
 
 			if (isVerified) {
-				// account creation
 				const JWT_SECRET = z.string().safeParse(process.env.JWT_SECRET);
 				if (!JWT_SECRET.success) {
 					throw Error("Missing env variable JWT_SECRET");
 				}
 
-				const token = jwt.sign(
-					{
-						sub: safeBody.address.toLowerCase(),
-					},
-					JWT_SECRET.data,
-					{
-						expiresIn: "7d",
-					},
-				);
-
-				const serviceResponse = new ServiceResponse(
-					ResponseStatus.Success,
-					"OK",
-					{ token },
-					StatusCodes.OK,
-				);
-				handleServiceResponse(serviceResponse, res);
+				const user = await createUserIfNotExist(safeBody.address);
+				if (user) {
+					const token = jwt.sign(
+						{
+							sub: user.address.toLowerCase(),
+						},
+						JWT_SECRET.data,
+						{
+							expiresIn: "7d",
+						},
+					);
+					const serviceResponse = new ServiceResponse(
+						ResponseStatus.Success,
+						"OK",
+						{ token },
+						StatusCodes.OK,
+					);
+					handleServiceResponse(serviceResponse, res);
+				} else {
+					handleServiceResponse(
+						new ServiceResponse(
+							ResponseStatus.Failed,
+							"User not found",
+							null,
+							StatusCodes.BAD_REQUEST,
+						),
+						res,
+					);
+				}
 			} else {
 				const serviceResponse = new ServiceResponse(
 					ResponseStatus.Failed,
