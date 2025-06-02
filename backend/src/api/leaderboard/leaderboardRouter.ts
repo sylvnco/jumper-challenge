@@ -9,23 +9,24 @@ import {
 	ServiceResponse,
 } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
+import { authMiddleware } from "@/common/middleware/authMiddleware";
 
-export const healthCheckRegistry = new OpenAPIRegistry();
+export const leaderboardRegistry = new OpenAPIRegistry();
 
-export const healthCheckRouter: Router = (() => {
+export const leaderboardRouter: Router = (() => {
 	const router = express.Router();
 
-	healthCheckRegistry.registerPath({
+	leaderboardRegistry.registerPath({
 		method: "get",
-		path: "/health-check",
+		path: "/leaderboard",
 		tags: ["Health Check"],
 		responses: createApiResponse(z.null(), "Success"),
 	});
 
-	router.get("/", (_req: Request, res: Response) => {
+	router.get("/", authMiddleware, (_req: Request, res: Response) => {
 		const serviceResponse = new ServiceResponse(
 			ResponseStatus.Success,
-			"Service is healthy",
+			"Leaderboard",
 			null,
 			StatusCodes.OK,
 		);
