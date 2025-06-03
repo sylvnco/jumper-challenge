@@ -13,7 +13,8 @@
 		"biome:check": "biome check .",
 		"test": "vitest run",
 		"test:dev": "vitest dev",
-		"test:cov": "vitest run --coverage"
+		"test:cov": "vitest run --coverage",
+		"openapi-ts": "openapi-ts"
 	},
 	"dependencies": {
 		"@asteasolutions/zod-to-openapi": "^7.0.0",

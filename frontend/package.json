@@ -7,15 +7,18 @@
 		"build": "next build",
 		"start": "next start",
 		"biome": "biome check --write .",
-		"biome:check": "biome check ."
+		"biome:check": "biome check .",
+		"openapi-ts": "npx openapi-ts"
 	},
 	"dependencies": {
 		"@emotion/cache": "^11.11.0",
 		"@emotion/react": "^11.11.4",
 		"@emotion/styled": "^11.11.5",
+		"@hey-api/client-fetch": "^0.11.0",
 		"@mui/material": "^5.15.16",
 		"@mui/material-nextjs": "^5.15.11",
 		"@tanstack/react-query": "^5.79.0",
+		"jwt-decode": "^4.0.0",
 		"next": "14.2.3",
 		"react": "^18",
 		"react-dom": "^18",
@@ -25,9 +28,11 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
+		"@hey-api/openapi-ts": "^0.69.2",
 		"@types/node": "^20",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
+		"dotenv": "^16.5.0",
 		"eslint": "^8",
 		"eslint-config-next": "14.2.3",
 		"typescript": "^5"

@@ -4,10 +4,10 @@ import { walletConnect } from "wagmi/connectors";
 
 const walletConnectId = process.env.WALLET_CONNECT_ID;
 
-export type chainIds = 1 | 11155111 | 137 | 80002;
+export type chainIds = 1 | 11155111 | 137;
 
 export const config = createConfig({
-	chains: [sepolia, mainnet, polygonAmoy, polygon],
+	chains: [sepolia, mainnet, polygon],
 	connectors: [
 		injected(),
 		// walletConnect({
@@ -19,7 +19,6 @@ export const config = createConfig({
 		[sepolia.id]: http(),
 		[mainnet.id]: http(),
 		[polygon.id]: http(),
-		[polygonAmoy.id]: http(),
 	},
 });
 

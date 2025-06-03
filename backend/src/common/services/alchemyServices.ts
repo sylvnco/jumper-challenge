@@ -2,12 +2,18 @@ import { getTokensByWallet as getAlchemyTokensByWallet } from "@/common/clients/
 import { formatUnits, hexToBigInt, isHex, type Address, type Hex } from "viem";
 import { type TokenResponse, TokenSchema } from "@/common/models/tokenResponse";
 import { z } from "zod";
+import { setCache, getCache } from "@/common/cache";
 
 export const getTokensByWallet = async (
 	address: Address,
+	chainId?: number,
 ): Promise<TokenResponse[]> => {
 	try {
-		const alchemyTokens = await getAlchemyTokensByWallet(address);
+		const cache = getCache<TokenResponse[]>(`${address}-${chainId}`);
+		if (cache) {
+			return z.array(TokenSchema).parse(cache);
+		}
+		const alchemyTokens = await getAlchemyTokensByWallet(address, chainId);
 
 		const tokens = alchemyTokens
 			.filter(({ tokenBalance, tokenMetadata, tokenAddress }) => {
@@ -34,9 +40,13 @@ export const getTokensByWallet = async (
 					symbol: x.tokenMetadata?.symbol,
 				};
 			});
-		return z.array(TokenSchema).parse(tokens);
+
+		const parsedTokens = z.array(TokenSchema).parse(tokens);
+		setCache(`${address}-${chainId}`, parsedTokens, 1000 * 60 * 60 * 24);
+
+		return parsedTokens;
 	} catch (error) {
 		console.error("Error while processing tokens", error);
-		return [];
+		throw new Error("Error while processing tokens list");
 	}
 };

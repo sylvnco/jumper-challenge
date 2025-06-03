@@ -10,6 +10,7 @@ import {
 } from "@/common/models/serviceResponse";
 import { handleServiceResponse } from "@/common/utils/httpHandlers";
 import { authMiddleware } from "@/common/middleware/authMiddleware";
+import { getAllUser } from "@/common/db/repositories/userRepository";
 
 export const leaderboardRegistry = new OpenAPIRegistry();
 
@@ -20,14 +21,26 @@ export const leaderboardRouter: Router = (() => {
 		method: "get",
 		path: "/leaderboard",
 		tags: ["Health Check"],
-		responses: createApiResponse(z.null(), "Success"),
+		responses: createApiResponse(
+			z.object({
+				users: z.array(
+					z.object({
+						id: z.number(),
+						address: z.string(),
+						createdAt: z.date(),
+					}),
+				),
+			}),
+			"Success",
+		),
 	});
 
-	router.get("/", authMiddleware, (_req: Request, res: Response) => {
+	router.get("/", authMiddleware, async (_req: Request, res: Response) => {
+		const allUsers = await getAllUser();
 		const serviceResponse = new ServiceResponse(
 			ResponseStatus.Success,
 			"Leaderboard",
-			null,
+			{ users: allUsers },
 			StatusCodes.OK,
 		);
 		handleServiceResponse(serviceResponse, res);

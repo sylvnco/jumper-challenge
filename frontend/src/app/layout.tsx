@@ -1,4 +1,5 @@
 import Header from "@/components/header";
+import NavLink from "@/components/nav-link";
 import Providers from "@/components/providers";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -21,6 +22,7 @@ export default function RootLayout({
 			<body className={inter.className}>
 				<Providers>
 					<Header />
+					<NavLink />
 					{children}
 				</Providers>
 				<Toaster position="top-right" reverseOrder={false} />

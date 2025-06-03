@@ -1,18 +1,20 @@
 "use client";
+import AccountCreation from "@/components/account-creation";
 import { Typography } from "@mui/material";
 import { useAccount } from "wagmi";
-import TokenList from "@/components/token-list";
 
-export default function Home() {
+const Leaderboard = () => {
 	const { isConnected } = useAccount();
 	return (
 		<>
 			{!isConnected && (
 				<Typography textAlign={"center"} variant="h1" marginTop={10}>
-					Please connect wallet to load tokens
+					Please connect wallet to access leaderboard
 				</Typography>
 			)}
-			{isConnected && <TokenList />}
+			{isConnected && <AccountCreation />}
 		</>
 	);
-}
+};
+
+export default Leaderboard;

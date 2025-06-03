@@ -1,6 +1,7 @@
 import { Alchemy, Network, type PortfolioAddress } from "alchemy-sdk";
 import type { Address } from "viem";
 import type { AlchemyTokenResponse } from "@/common/models/alchemyTokenResponse";
+import { convertChainIdToAlchemyNetwork } from "@/common/utils/networkConverter";
 const settings = {
 	apiKey: process.env.ALCHEMY_KEY,
 	Network: Network.ETH_MAINNET,
@@ -8,10 +9,11 @@ const settings = {
 
 const alchemy = new Alchemy(settings);
 
-export const getTokensByWallet = async (address: Address) => {
+export const getTokensByWallet = async (address: Address, chainId?: number) => {
 	let tokensResult: AlchemyTokenResponse[] = [];
+	const network = convertChainIdToAlchemyNetwork(chainId);
 	const porfolioAddress: PortfolioAddress[] = [
-		{ address, networks: [Network.ETH_MAINNET] },
+		{ address, networks: [network] },
 	];
 	try {
 		const result = await alchemy.portfolio.getTokensByWallet(porfolioAddress);
@@ -22,8 +24,7 @@ export const getTokensByWallet = async (address: Address) => {
 
 		tokensResult = tokens;
 	} catch (error) {
-		console.error("Error while fetching tokens from alchemy");
-		return [];
+		throw new Error("Error while fetching tokens from alchemy");
 	}
 
 	return tokensResult;

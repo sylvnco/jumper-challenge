@@ -14,6 +14,7 @@ import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { isAddress } from "viem";
 import { getTokensByWallet } from "@/common/services/alchemyServices";
+import { TokenSchema } from "@/common/models/tokenResponse";
 
 extendZodWithOpenApi(z);
 
@@ -23,6 +24,7 @@ const tokenQuerySchema = z.object({
 	address: z.string().refine((val) => isAddress(val, { strict: false }), {
 		message: "Must be a valid Evm address",
 	}),
+	chainId: z.coerce.number().optional(),
 });
 
 type TokenQuery = z.infer<typeof tokenQuerySchema>;
@@ -37,24 +39,29 @@ export const tokenRouter: Router = (() => {
 		request: {
 			query: tokenQuerySchema,
 		},
-		responses: createApiResponse(z.null(), "Success"),
+		responses: createApiResponse(z.array(TokenSchema), "Success"),
 	});
 
 	router.get(
 		"/",
 		validateRequest(z.object({ query: tokenQuerySchema })),
 		async (_req: Request, res: Response) => {
-			const safeQuery = _req.query as TokenQuery;
+			const safeQuery = tokenQuerySchema.safeParse(_req.query);
+			if (safeQuery.success) {
+				// it should always be success has we validateRequest in the middleware
+				const tokens = await getTokensByWallet(
+					safeQuery.data?.address,
+					safeQuery.data.chainId,
+				);
 
-			const tokens = await getTokensByWallet(safeQuery.address);
-
-			const serviceReponse = new ServiceResponse(
-				ResponseStatus.Success,
-				"GetTokens",
-				tokens,
-				StatusCodes.OK,
-			);
-			handleServiceResponse(serviceReponse, res);
+				const serviceReponse = new ServiceResponse(
+					ResponseStatus.Success,
+					"GetTokens",
+					tokens,
+					StatusCodes.OK,
+				);
+				handleServiceResponse(serviceReponse, res);
+			}
 		},
 	);
 	return router;

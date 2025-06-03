@@ -46,7 +46,7 @@ export const accountRouter: Router = (() => {
 				},
 			},
 		},
-		responses: createApiResponse(z.null(), "Success"),
+		responses: createApiResponse(z.object({ jwt: z.string() }), "Success"),
 	});
 
 	router.post(
@@ -80,7 +80,7 @@ export const accountRouter: Router = (() => {
 					const serviceResponse = new ServiceResponse(
 						ResponseStatus.Success,
 						"OK",
-						{ token },
+						{ jwt: token },
 						StatusCodes.OK,
 					);
 					handleServiceResponse(serviceResponse, res);
