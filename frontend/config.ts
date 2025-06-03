@@ -2,17 +2,16 @@ import { createConfig, http, injected } from "wagmi";
 import { sepolia, mainnet, polygonAmoy, polygon } from "viem/chains";
 import { walletConnect } from "wagmi/connectors";
 
-const walletConnectId = process.env.WALLET_CONNECT_ID;
-
+const walletConnectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_ID;
 export type chainIds = 1 | 11155111 | 137;
 
 export const config = createConfig({
 	chains: [sepolia, mainnet, polygon],
 	connectors: [
 		injected(),
-		// walletConnect({
-		// 	projectId: walletConnectId!,
-		// }),
+		walletConnect({
+			projectId: walletConnectId as string,
+		}),
 	],
 	ssr: true,
 	transports: {

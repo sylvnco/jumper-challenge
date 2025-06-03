@@ -1,4 +1,12 @@
-import { Modal, Box, Typography, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import {
+	Modal,
+	Box,
+	Typography,
+	List,
+	ListItem,
+	ListItemButton,
+	ListItemText,
+} from "@mui/material";
 import type { Dispatch, SetStateAction } from "react";
 import { useConnect, injected } from "wagmi";
 import { walletConnect } from "wagmi/connectors";
@@ -24,8 +32,9 @@ const ConnectionModal = ({ setOpen, open }: ConnectionModalType) => {
 	const handleClose = () => setOpen(false);
 	const { connect, connectors } = useConnect();
 
-	const walletConnectConnector = connectors.find((connector) => connector.id === "walletConnect");
-
+	const walletConnectConnector = connectors.find(
+		(connector) => connector.id === "walletConnect",
+	);
 	const connectWalletConnect = () => {
 		if (walletConnectConnector) {
 			connect({ connector: walletConnectConnector });
@@ -38,7 +47,8 @@ const ConnectionModal = ({ setOpen, open }: ConnectionModalType) => {
 			open={open}
 			onClose={handleClose}
 			aria-labelledby="modal-modal-title"
-			aria-describedby="modal-modal-description">
+			aria-describedby="modal-modal-description"
+		>
 			<Box sx={style}>
 				<Typography variant="h6" component="h2">
 					Connect wallet
@@ -51,14 +61,18 @@ const ConnectionModal = ({ setOpen, open }: ConnectionModalType) => {
 									onClick={() => {
 										connect({ connector: injected() });
 										setOpen(false);
-									}}>
+									}}
+								>
 									<ListItemText primary="Browser Wallet" />
 								</ListItemButton>
 							</ListItem>
 							{walletConnectConnector && (
 								<ListItem disablePadding>
 									<ListItemButton>
-										<ListItemText onClick={connectWalletConnect} primary="Wallet Connect" />
+										<ListItemText
+											onClick={connectWalletConnect}
+											primary="Wallet Connect"
+										/>
 									</ListItemButton>
 								</ListItem>
 							)}
