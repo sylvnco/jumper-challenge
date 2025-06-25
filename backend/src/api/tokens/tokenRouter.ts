@@ -50,7 +50,7 @@ export const tokenRouter: Router = (() => {
 			if (safeQuery.success) {
 				// it should always be success has we validateRequest in the middleware
 				const tokens = await getTokensByWallet(
-					safeQuery.data?.address,
+					safeQuery.data.address,
 					safeQuery.data.chainId,
 				);
 

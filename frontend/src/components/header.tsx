@@ -1,6 +1,21 @@
 "use client";
-import { AppBar, Button, FormControl, InputLabel, MenuItem, Select, Toolbar, Typography } from "@mui/material";
-import { useAccount, useSwitchChain, useBalance, useDisconnect, useChains } from "wagmi";
+import {
+	AppBar,
+	Button,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	Toolbar,
+	Typography,
+} from "@mui/material";
+import {
+	useAccount,
+	useSwitchChain,
+	useBalance,
+	useDisconnect,
+	useChains,
+} from "wagmi";
 import type { chainIds } from "@/../config";
 import ConnectionModal from "@/components/modals/connection-modal";
 import { useState } from "react";
@@ -18,8 +33,12 @@ const Header = () => {
 	return (
 		<AppBar position="static" color="transparent">
 			<Toolbar>
-				<Typography variant="h6" component="div" sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
-					Jumper Challenge
+				<Typography
+					variant="h6"
+					component="div"
+					sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
+				>
+					Portfolio viewer
 				</Typography>
 				{isConnected ? (
 					<>
@@ -28,7 +47,10 @@ const Header = () => {
 							<Select
 								value={chain?.id}
 								label="Network"
-								onChange={(e) => switchChain({ chainId: e.target.value as chainIds })}>
+								onChange={(e) =>
+									switchChain({ chainId: e.target.value as chainIds })
+								}
+							>
 								{chains.map((c) => (
 									<MenuItem key={c.id} value={c.id}>
 										{c.name}
@@ -43,7 +65,8 @@ const Header = () => {
 								overflow: "hidden",
 								textOverflow: "ellipsis",
 								marginRight: "1rem",
-							}}>
+							}}
+						>
 							{`${address?.slice(0, 6)}...${address?.slice(-4)}`}
 						</Typography>
 						<Typography variant="body2" sx={{ marginRight: "1rem" }}>

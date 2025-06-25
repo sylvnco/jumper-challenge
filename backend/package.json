@@ -1,7 +1,7 @@
 {
-	"name": "jumper-challenge-backend",
+	"name": "portfolio-viewer-backend",
 	"version": "1.0.0",
-	"description": "Jumper challenge backend",
+	"description": "Portfolio viewer backend",
 	"main": "index.ts",
 	"private": true,
 	"scripts": {
@@ -66,6 +66,5 @@
 		"**/*": "npm run format",
 		"**/*.{js,ts}": "npm run lint:fix"
 	},
-	"repository": "lifinance/jumper-challenge",
 	"license": "ISC"
 }

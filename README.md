@@ -1,5 +1,7 @@
 # Project Setup Instructions
 
+This is a simple test project for a portfolio viewer like debank or zapper. 
+
 ## Prerequisites
 
 Make sure you have PNPM installed on your system.
